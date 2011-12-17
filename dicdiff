@@ -1,0 +1,31 @@
+#
+# % dicdiff dic1 dic2
+#
+
+dic1 = ARGV.shift
+dic2 = ARGV.shift
+
+exit unless dic2
+
+words = {}
+
+File.open(dic1){ |f|
+  f.each { |line|
+    line.chomp!
+    a = line.split(/\s+/)
+    word = a[1]
+    words[word] = true
+  }
+}
+
+File.open(dic2){ |f|
+  f.each { |line|
+    line.chomp!
+    a = line.split(/\s+/)
+    word = a[1]
+    if !words[word] then
+      puts line
+    end
+  }
+}
+

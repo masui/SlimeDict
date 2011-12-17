@@ -1,0 +1,172 @@
+# -*- coding: utf-8 -*-
+# -*- ruby -*-
+
+require 'romakana'
+
+files = ARGV
+outs = {}  # 接続先が存在するかどうか
+
+number = {}
+number1 = 1     # 非自立語の番号
+number2 = 1000  # 自立語の番号
+
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.pep'),true)
+
+def valid(word) # 自立語かどうか
+  invalid = [
+             '[な否定]',
+             '[ず否定]',
+             '[た希望]',
+             '[ば仮定]',
+             '[ら仮定]',
+             '[否定希望]',
+             '[丁寧]',
+             '[受身接続]',
+             '[ても]',
+             '[でも]',
+             '[だ]',
+             '[た]',
+             '[ずる]',
+             '[せる]',
+             '[じゃ]',
+             '[ちゃ]',
+             '[て]',
+             '[てくる]',
+             '[で]',
+             '[でくる]',
+             '[なだ]',
+             '[な]',
+             '[なあ]',
+             '[たがる]',
+             '[漢数字3]',  # 「億」などは先頭に来ない
+             ]
+  !invalid.member?(word) && word !~ /語尾\]/
+end
+
+#
+# パス1: 単語または単語クラスに番号をふる
+#
+lines = {}
+files.each { |file|
+  defaultwordclass = ''
+  defaultnextclass = ''
+  File.open(file){ |f|
+    #    STDERR.puts "#{file}...."
+    f.each { |line|
+      line.chomp!
+      next if line =~ /^\s*$/  # 空白行除去
+      next if line =~ /^#/     # コメント除去
+      (yomi, word, wordclass, nextclass) = line.split(/\s+/)
+      if !wordclass && defaultwordclass == '' then
+        wordclass = word
+      end
+      if wordclass && !nextclass then
+        nextclass = ''
+      end
+      wordclass = defaultwordclass unless wordclass
+      nextclass = defaultnextclass unless nextclass
+      defaultwordclass = wordclass
+      defaultnextclass = nextclass
+      l = "#{yomi} #{word} #{wordclass} #{nextclass}"
+      next if lines[l]      # 同じエントリ除去
+      lines[l] = true
+
+      # STDERR.puts "#{yomi} #{word} <#{wordclass}> <#{nextclass}>"
+
+      if nextclass != '' then
+        outs[nextclass] = true # 接続先が存在するとき
+      end
+      #
+      # 単語や単語クラス番号づけ
+      # xxxという単語の番号はnumber[xxx]に格納
+      #
+      if wordclass != '' && number[wordclass].nil? then
+        #
+        # 自立語はnumber2, 非自立語はnumber1の番号を割り当てる
+        #
+        if valid(wordclass) then # 自立語
+          number[wordclass] = number2
+          number2 += 1
+        else
+          number[wordclass] = number1
+          number1 += 1
+        end
+      end
+      if nextclass != '' && nextclass && number[nextclass].nil? then
+        if valid(nextclass) then
+          number[nextclass] = number2
+          number2 += 1
+        else
+          number[nextclass] = number1
+          number1 += 1
+        end
+      end
+    }
+  }
+}
+
+number.each { |key,val|
+  #   STDERR.puts "#{key} #{val}"
+}
+
+#
+# パス2:
+#
+wroma = {}
+words = {}        # 出力された単語リスト
+nextwords = {}    # 接続先として出現した単語リスト
+lines = {}
+files.each { |file|
+  defaultwordclass = ''
+  defaultnextclass = ''
+  File.open(file){ |f|
+    # STDERR.puts "#{file}...."
+    f.each { |line|
+      line.chomp!
+      next if line =~ /^\s*$/  # 空白行除去
+      next if line =~ /^#/     # コメント除去
+#      lines[line] = true
+      (yomi, word, wordclass, nextclass) = line.split(/\s+/)
+      if !wordclass && defaultwordclass == '' then
+        wordclass = word
+      end
+      if wordclass && !nextclass then
+        nextclass = ''
+      end
+      wordclass = defaultwordclass unless wordclass
+      nextclass = defaultnextclass unless nextclass
+      defaultwordclass = wordclass
+      defaultnextclass = nextclass
+      l = "#{yomi} #{word} #{wordclass} #{nextclass}"
+      next if lines[l]      # 同じエントリ除去
+      lines[l] = true
+      #
+      # 接続先が単語クラスでない場合は接続先単語のリストを生成
+      #
+      if nextclass !~ /^\[.*\]$/ then
+        nextwords[nextclass] = true # 接続先リスト
+      end
+      if number[wordclass] then
+        if wordclass !~ /^\[.*\]$/ then
+          words[wordclass] = true # 出力された単語リスト
+        end
+        romas = [yomi]
+        if yomi =~ /^\xe3[\x81\x82]/ then
+          romas = rk.hiragana2roma(yomi)
+        end
+        wroma[word] = romas
+        romas.each { |roma|
+          puts "#{roma}\t#{word}\t#{number[nextclass].to_i}\t#{number[wordclass].to_i}"
+        }
+      end
+    }
+  }
+}
+
+
+
+
+
+
+
+
