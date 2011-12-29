@@ -3,10 +3,10 @@
 #
 #  Gyazz辞書やテキスト辞書からSlime用の辞書を作成
 #
-#  % mergedic {wiki名::ページ名} {辞書テキスト [*]重み}
+#  % dicmerge {wiki名::ページ名} {辞書テキスト [*]重み}
 #
 #  例
-#  % mergedic 'kdict::リスト' noun.dic 1000 'kdict::テスト'
+#  % dicmerge 'kdict::リスト' noun.dic 1000 'kdict::テスト'
 #
 
 require 'net/http'
@@ -31,8 +31,7 @@ class MergeDic
     end
     n = 1.0
     gyazz = Gyazz.new(wiki)
-    page = GyazzPage.new(gyazz,name)
-    page.each { |line|
+    gyazz.get(name).each { |line|
       STDERR.puts "!!!!" if line =~ /empty/
       line.chomp!
       line.sub!(/\s+$/,'')
@@ -51,8 +50,7 @@ class MergeDic
     STDERR.puts "Processing #{wiki}::#{page}"
     @wiki = wiki
     gyazz = Gyazz.new(wiki)
-    rootpage = GyazzPage.new(gyazz,page)
-    rootpage.each { |line|
+    gyazz.get(page).each { |line|
       line.chomp!
       next if line =~ /^#/
       if line =~ /\[\[(.*)\]\]\s+(\*)?(\d+)/ then # e.g. "[[普通名詞]] *100"

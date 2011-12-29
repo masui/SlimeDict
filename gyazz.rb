@@ -1,1 +1,0 @@
-/Users/masui/GyazzAPI/gyazz.rb
