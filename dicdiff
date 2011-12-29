@@ -1,31 +1,62 @@
+# -*- coding: utf-8 -*-
 #
-# % dicdiff dic1 dic2
+# % dicdiff [-v] dic1 dic2
+#   dic1に含まれるがdic2に含まれないものをリストする
+#   -v のときは両方に含まれるものをリストする
+#
+# 辞書の差分をとる
+# % dicdiff A B | dicdiff C | dicdiff D ...
 #
 
-dic1 = ARGV.shift
-dic2 = ARGV.shift
+reverse = false
+if ARGV[0] == '-v' then
+  reverse = true
+  ARGV.shift
+end
 
-exit unless dic2
+if ARGV.length == 2 then
+  f2 = File.open(ARGV[0])
+  f1 = File.open(ARGV[1])
+elsif ARGV.length == 1 then
+  f2 = STDIN
+  f1 = File.open(ARGV[0])
+else
+  STDERR.puts "% dicdiff dic1 dic2"
+  STDERR.puts "% cat dic1 | dicdiff dic2"
+  exit
+end
 
 words = {}
 
-File.open(dic1){ |f|
-  f.each { |line|
-    line.chomp!
-    a = line.split(/\s+/)
+f1.each { |line|
+  line.chomp!
+  next if line =~ /^#/
+  next if line =~ /^$/
+  a = line.split(/\s+/)
+  word = a[0]
+  if a.length > 1 then
     word = a[1]
-    words[word] = true
-  }
+  end
+  words[word] = true
 }
 
-File.open(dic2){ |f|
-  f.each { |line|
-    line.chomp!
-    a = line.split(/\s+/)
+f2.each { |line|
+  line.chomp!
+  next if line =~ /^#/
+  next if line =~ /^$/
+  a = line.split(/\s+/)
+  word = a[0]
+  if a.length > 1 then
     word = a[1]
+  end
+  if reverse then
+    if words[word] then
+      puts line
+    end
+  else
     if !words[word] then
       puts line
     end
-  }
+  end
 }
 

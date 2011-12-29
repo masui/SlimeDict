@@ -5,4 +5,4 @@ all:
 
 push:
 	git push pitecan.com:/home/masui/git/SlimeDict.git
-#	git push git@github.com:masui/Slime.git
+	git push git@github.com:masui/Slime.git
