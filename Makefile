@@ -1,22 +1,59 @@
 all:
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge meishi-wikipedia.dic 100 'SlimeDict::リスト' 'SlimeDict::名詞' 'SlimeDict::固有名詞' 'SlimeDict::増井リスト' > /tmp/tmp
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+		meishi-wikipedia.dic 100 \
+		'SlimeDict::リスト' \
+		'SlimeDict::名詞' \
+		'SlimeDict::固有名詞' \
+		'SlimeDict::増井リスト' \
+		> /tmp/tmp
 	grep -v '.*-' /tmp/tmp > /tmp/tmp1
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt /tmp/tmp1 > dict.txt
 
-get:
+backup:
 	ruby ~/GyazzBackup/gyazz_backup SlimeDict
 
-old:
-	ruby -I~/SlimeDict ~/SlimeDict/dicmerge meishi-wikipedia.dic 100 'kdict::リスト' 'kdict::名詞' 'kdict::固有名詞' 'kdict::増井リスト' > /tmp/tmp
-	grep -v '.*-' /tmp/tmp > /tmp/tmp1
-	ruby -I~/SlimeDict ~/SlimeDict/connection2txt.save /tmp/tmp1 > dict.txt
+wikipedia: corpus/jawiki-latest-pages-articles.xml.bz2
+	bzip2 -d < corpus/jawiki-latest-pages-articles.xml.bz2 \
+		| head -1000000 \
+		| mecab \
+		| ruby -Iprograms programs/mecab2dic \
+		| sort | uniq -c | sort -r -n \
+		| awk '{print $$2 " " $$3 " " $$4 " " $$5}' \
+		| head -6000 > wikipedia.txt
+
+ktai: corpus/ktai.txt
+	cat corpus/ktai.txt \
+		| head -1000000 \
+		| mecab \
+		| ruby -Iprograms programs/mecab2dic \
+		| sort | uniq -c | sort -r -n \
+		| awk '{print $$2 " " $$3 " " $$4 " " $$5}' \
+		| head -6000 > ktai.txt
+
+meishi-wikipedia.txt: corpus/jawiki-latest-pages-articles.xml.bz2
+	bzip2 -d < corpus/jawiki-latest-pages-articles.xml.bz2 \
+		| head -100000 \
+		| mecab \
+		| ruby -Iprograms programs/mecab-meishi.rb \
+		| sort | uniq -c | sort -r -n \
+		| ruby -Iprograms programs/freq2dic '[名詞]' '[名詞接続]' \
+		| head -6000 > meishi-wikipedia.txt
+
+meishi-ktai.txt: corpus/ktai.txt
+	cat corpus/ktai.txt \
+		| head -1000000 \
+		| mecab \
+		| ruby -Iprograms programs/mecab-meishi.rb \
+		| sort | uniq -c | sort -r -n \
+		| ruby -Iprograms programs/freq2dic '[名詞]' '[名詞接続]' \
+		| head -6000 > meishi-ktai.txt
 
 catdiff:
-	ruby -I~/SlimeDict ~/SlimeDict/dicmerge 'SlimeDict::カテゴリ' > /tmp/tmp
-	ruby dicdiff meishi-wikipedia.dic /tmp/tmp | wc
+	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > /tmp/tmp
+	ruby programs/dicdiff meishi-wikipedia.dic /tmp/tmp | wc
 
 catmore:
-	ruby dicdiff meishi-wikipedia.dic /tmp/tmp | more
+	ruby programs/dicdiff meishi-wikipedia.dic /tmp/tmp | more
 
 push:
 	git push pitecan.com:/home/masui/git/SlimeDict.git
