@@ -1,0 +1,77 @@
+# -*- coding: utf-8 -*-
+def valid(word) # 自立語かどうか
+  invalid = [
+             '[な否定]',
+             '[ず否定]',
+             '[た希望]',
+             '[ば仮定]',
+             '[ら仮定]',
+             '[否定希望]',
+             '[丁寧]',
+             '[受身接続]',
+             '[ても]',
+             '[でも]',
+             '[だ]',
+             '[た]',
+             '[ずる]',
+             '[せる]',
+             '[じゃ]',
+             '[ちゃ]',
+             '[て]',
+             '[てくる]',
+             '[で]',
+             '[でくる]',
+             '[なだ]',
+             '[な]',
+             '[なあ]',
+             '[たがる]',
+             '[漢数字3]',  # 「億」などは先頭に来ない
+             ]
+  !invalid.member?(word) && word !~ /語尾\]/
+end
+
+files = ARGV
+files.each { |file|
+  lines = []
+  File.open(file){ |f|
+    f.each { |line|
+      line.chomp!
+      if line =~ /^#/ || line =~ /^\s*$/ then
+        lines.push(line)
+        next
+      end
+      (pat, word, category, nextcategory) = line.split(/\s+/)
+      if category.nil? then
+        lines.push(line)
+        next
+      end
+      valid_tail = true
+      if word =~ /^\*/ then
+        valid_tail = false
+        word.sub!(/^\*/,'')
+      end
+      valid_top = true
+      if !valid(category) then
+        valid_top = false
+      end
+      newword = (valid_top ? "" : "*") + word + (valid_tail ? "" : "*")
+      category.sub!(/^\[/,'')
+      category.sub!(/\]$/,'')
+      if nextcategory then
+        nextcategory.sub!(/^\[/,'')
+        nextcategory.sub!(/\]$/,'')
+        s = "#{pat} #{newword} #{category} #{nextcategory}"
+        lines.push(s)
+      else
+        s = "#{pat} #{newword} #{category} "
+        lines.push(s)
+      end
+    }
+  }
+  File.open(file,"w"){ |f|
+    lines.each { |line|
+      f.puts line
+    }
+  }
+}
+

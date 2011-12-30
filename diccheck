@@ -1,0 +1,22 @@
+#!/usr/bin/ruby
+# -*- coding: utf-8 -*-
+#
+# 変なコードが入っているのをチェック
+#
+
+name = ARGV.shift
+
+filenames = []
+Dir.open(name).each { |file|
+  if file =~ /^(.*)\.txt$/ then
+    File.open("#{name}/#{file}"){ |f|
+      f.each { |line|
+        if line =~ /[\x1f]/ then
+          puts file
+          puts line
+          exit
+        end
+      }
+    }
+  end
+}
