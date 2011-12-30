@@ -1,5 +1,17 @@
 all:
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+		wikipedia.txt 500 \
+		ktai.txt 300 \
+		'SlimeDict::リスト' \
+		'SlimeDict::名詞' \
+		'SlimeDict::固有名詞' \
+		'SlimeDict::増井リスト' \
+		> /tmp/tmp
+	grep -v '.*-' /tmp/tmp > /tmp/tmp1
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt /tmp/tmp1 > dict.txt
+
+all2:
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
 		meishi-wikipedia.dic 100 \
 		'SlimeDict::リスト' \
 		'SlimeDict::名詞' \
