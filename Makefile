@@ -1,7 +1,7 @@
 all:
-	ruby -I~/SlimeDict ~/SlimeDict/dicmerge meishi-wikipedia.dic 100 'SlimeDict::リスト' 'SlimeDict::名詞' 'SlimeDict::固有名詞' 'SlimeDict::増井リスト' > /tmp/tmp
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge meishi-wikipedia.dic 100 'SlimeDict::リスト' 'SlimeDict::名詞' 'SlimeDict::固有名詞' 'SlimeDict::増井リスト' > /tmp/tmp
 	grep -v '.*-' /tmp/tmp > /tmp/tmp1
-	ruby -I~/SlimeDict ~/SlimeDict/connection2txt /tmp/tmp1 > dict.txt
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt /tmp/tmp1 > dict.txt
 
 get:
 	ruby ~/GyazzBackup/gyazz_backup SlimeDict
