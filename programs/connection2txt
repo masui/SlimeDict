@@ -19,6 +19,7 @@ files.each { |file|
       line.chomp!
       next if line =~ /^\s*$/  # 空白行除去
       next if line =~ /^#/     # コメント除去
+      line.sub!(/\s+#.*$/,'')  # コメント除去
       (yomi, word, wordclass, nextclass) = line.split(/\s+/)
       next if !wordclass
       nextclass = '' if !nextclass

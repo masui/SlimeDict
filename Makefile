@@ -44,10 +44,10 @@ ktai: corpus/ktai.txt
 
 catdiff:
 	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > /tmp/tmp
-	ruby programs/dicdiff meishi-wikipedia.txt /tmp/tmp | wc
+	ruby programs/dicdiff wikipedia.txt /tmp/tmp | wc
 
 catmore:
-	ruby programs/dicdiff meishi-wikipedia.txt /tmp/tmp | more
+	ruby programs/dicdiff wikipedia.txt /tmp/tmp | more
 
 push:
 	git push pitecan.com:/home/masui/git/SlimeDict.git

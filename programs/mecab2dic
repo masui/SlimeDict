@@ -1,0 +1,112 @@
+# -*- coding: utf-8 -*-
+# 名詞
+#     文学   名詞,一般,*,*,*,*,文学,ブンガク,ブンガク
+#     面     名詞,接尾,一般,*,*,*,面,メン,メン
+#     評価   名詞,サ変接続,*,*,*,*,評価,ヒョウカ,ヒョーカ
+# い形容詞
+#     良い   形容詞,非自立,*,*,形容詞・アウオ段,基本形,良い,ヨイ,ヨイ
+#     多く   形容詞,自立,*,*,形容詞・アウオ段,連用テ接続,多い,オオク,オーク
+#     にくい 形容詞,非自立,*,*,形容詞・アウオ段,基本形,にくい,ニクイ,ニクイ
+# な形容詞
+#     主要   名詞,形容動詞語幹,*,*,*,*,主要,シュヨウ,シュヨー
+# 副詞
+#     ほぼ   副詞,一般,*,*,*,*,ほぼ,ホボ,ホボ
+# 動詞
+#     異なっ 動詞,自立,*,*,五段・ラ行,連用タ接続,異なる,コトナッ,コトナッ
+#     考え   動詞,自立,*,*,一段,未然形,考える,カンガエ,カンガエ
+#     呼ば   動詞,自立,*,*,五段・バ行,未然形,呼ぶ,ヨバ,ヨバ
+#     ふ     動詞,自立,*,*,五段・ラ行,体言接続特殊２,ふる,フ,フ
+#     ほ     動詞,自立,*,*,五段・ラ行,体言接続特殊２,ほる,ホ,ホ
+
+
+
+require 'Romakana'
+
+# rk = Romakana.new
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.pep'),true)
+
+lines = 0
+
+ARGF.each { |line|
+  line.chomp!
+  (w,r) = line.split(/\s+/)
+  if r then
+    a = r.split(/,/)
+    s = ''
+    if a && a[0] then
+      if a[0] == '動詞' then
+        base = a[6]
+        yomi = a[7]
+        if a[4] =~ /五段/ then
+          a[4] =~ /(.)行/
+          dan = rk.roma2hiragana(rk.katakana2roma($1)[0])[0]
+          dan = 'あ' if dan == 'わ'
+          base.sub!(/(.)$/,'')
+          h = a[7]
+          h.sub!(/(.)$/,'')
+          if h != "" then
+            romas = rk.katakana2roma(h)
+            if romas && romas[0] then
+              hira = rk.roma2hiragana(romas[0])
+              s = "#{hira} #{base} #{dan}行五段動詞 #{dan}行五段動詞語尾"
+            end
+          end
+        elsif a[4] =~ /一段/ then
+          h = a[7]
+          if a[5] == '基本形'
+            base.sub!(/(.)$/,'')
+            h.sub!(/(.)$/,'')
+          elsif a[5] == '連用形' || a[5] == '未然形' then
+            base.sub!(/(.)$/,'')
+#            h.sub!(/(.)$/,'')
+          end
+          romas = rk.katakana2roma(h)
+          if romas && romas[0] then
+            hira = rk.roma2hiragana(romas[0])
+          end
+          s = "#{hira} #{base} 一段動詞 一段動詞語尾"
+        end
+      end
+      if a[1] =~ /形容動詞/ then
+        base = a[6]
+        yomi = a[7]
+        romas = rk.katakana2roma(a[7])
+        if romas && romas[0] then
+          hira = rk.roma2hiragana(romas[0])
+        end
+        s = "#{hira} #{w} な形容詞 な形容詞語尾"
+      elsif a[0] == '名詞' && a[1] != '固有名詞' && a[7] then
+        romas = rk.katakana2roma(a[7])
+        if romas && romas[0] then
+          hira = rk.roma2hiragana(romas[0])
+        end
+        s = "#{hira} #{w} 名詞 名詞接続"
+      elsif a[0] == '形容詞' then
+        base = a[6]
+        yomibase = a[7]
+        top = base.sub(/い$/,'')
+        if yomibase =~ /(イ|ク)$/ then
+          yomitop = yomibase.sub(/(イ|ク)$/,'')
+          hira = rk.roma2hiragana(rk.katakana2roma(yomitop)[0])
+          if hira !~ /^っ/ then
+            s = "#{hira} #{top} い形容詞 い形容詞語尾"
+          end
+        end
+      elsif a[0] == '副詞' then
+        romas = rk.katakana2roma(a[7])
+        if romas && romas[0] then
+          hira = rk.roma2hiragana(romas[0])
+        end
+        s = "#{hira} #{w} 副詞"
+      end
+    end
+    if s != '' then
+# puts line
+      puts s
+      lines += 1
+      if lines % 10000 == 0 then
+        STDERR.puts "#{lines}..."
+      end
+    end
+  end
+}
