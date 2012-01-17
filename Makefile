@@ -6,9 +6,9 @@ all:
 		'SlimeDict::名詞' \
 		'SlimeDict::固有名詞' \
 		'SlimeDict::増井リスト' \
-		> /tmp/tmp
-	grep -v '.*-' /tmp/tmp > /tmp/tmp1
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt /tmp/tmp1 > dict.txt
+		> tmp/tmp
+	grep -v '.*-' tmp/tmp > tmp/tmp1
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt tmp/tmp1 > dict.txt
 
 all2:
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
@@ -17,9 +17,9 @@ all2:
 		'SlimeDict::名詞' \
 		'SlimeDict::固有名詞' \
 		'SlimeDict::増井リスト' \
-		> /tmp/tmp
-	grep -v '.*-' /tmp/tmp > /tmp/tmp1
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt /tmp/tmp1 > dict.txt
+		> tmp/tmp
+	grep -v '.*-' tmp/tmp > tmp/tmp1
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt tmp/tmp1 > dict.txt
 
 backup:
 	ruby ~/GyazzBackup/gyazz_backup SlimeDict
@@ -43,11 +43,11 @@ ktai: corpus/ktai.txt
 		| head -10000 > ktai.txt
 
 catdiff:
-	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > /tmp/tmp
-	ruby programs/dicdiff wikipedia.txt /tmp/tmp | wc
+	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > tmp/tmp
+	ruby programs/dicdiff wikipedia.txt tmp/tmp | wc
 
 catmore:
-	ruby programs/dicdiff wikipedia.txt /tmp/tmp | more
+	ruby programs/dicdiff wikipedia.txt tmp/tmp | more
 
 push:
 	git push pitecan.com:/home/masui/git/SlimeDict.git

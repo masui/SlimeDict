@@ -4,12 +4,19 @@
 
 require 'romakana'
 
+rklist = "rklist.slime"
+
+if ARGV[0] == '-r' then
+  ARGV.shift
+  rklist = ARGV.shift
+end
+
 files = ARGV
 
 wordclassno = {}   # 単語クラス番号
 wordclassindex = 1
 
-rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.slime'),true)
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + rklist),true)
 
 lines = {}
 files.each { |file|
