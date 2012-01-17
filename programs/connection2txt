@@ -9,7 +9,7 @@ files = ARGV
 wordclassno = {}   # 単語クラス番号
 wordclassindex = 1
 
-rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.pep'),true)
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.slime'),true)
 
 lines = {}
 files.each { |file|

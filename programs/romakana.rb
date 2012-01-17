@@ -5,7 +5,7 @@
 #
 #  rk = Romakana.new
 #  rk.hiragana2roma('じしょ') ⇒ ['jisho', 'jisyo', 'zisho', 'zisyo']
-#  rk = Romakana.new(File.readlines('rklist.pep')
+#  rk = Romakana.new(File.readlines('rklist.slime')
 #  rk.hiragana2roma('じしょ') ⇒ ['jisho', 'jisyo', 'zisho', 'zisyo']
 #
 
@@ -448,11 +448,11 @@ end
 if __FILE__ == $0 then
   # ちゃんとしたテストは test/romakana_test で実行すること
 #  rk = Romakana.new
-#  s = File.readlines('rklist.pep')
+#  s = File.readlines('rklist.slime')
 #  puts s
 #exit
 #  rk = Romakana.new
-  rk = Romakana.new(File.readlines('rklist.pep'))
+  rk = Romakana.new(File.readlines('rklist.slime'))
   puts rk.katakana2roma('ッチャッタ')
   puts rk.katakana2roma('ッ')
   puts rk.katakana2roma('ハンニャ')

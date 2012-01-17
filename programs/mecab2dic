@@ -23,7 +23,7 @@
 require 'Romakana'
 
 # rk = Romakana.new
-rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.pep'),true)
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + 'rklist.slime'),true)
 
 lines = 0
 
