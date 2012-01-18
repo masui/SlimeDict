@@ -1,4 +1,4 @@
-all:
+slime:
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
 		wikipedia.txt 500 \
 		ktai.txt 300 \
@@ -9,6 +9,18 @@ all:
 		> tmp/tmp
 	grep -v '.*-' tmp/tmp > tmp/tmp1
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt tmp/tmp1 > dict.txt
+
+gyaim:
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+		wikipedia.txt 500 \
+		ktai.txt 300 \
+		'SlimeDict::リスト' \
+		'SlimeDict::名詞' \
+		'SlimeDict::固有名詞' \
+		'SlimeDict::増井リスト' \
+		> tmp/tmp
+	grep -v '.*-' tmp/tmp > tmp/tmp1
+	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt -r rklist.gyaim -n tmp/tmp1 > ~/Gyaim/Resources/dict.txt
 
 all2:
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \

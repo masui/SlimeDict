@@ -248,7 +248,7 @@ $s = s
   end
   
   def krexpand(a,b,t,result,kr)
-#    puts "krexpand(#{a}, #{b}, #{t})"
+    # puts "krexpand(#{a}, #{b}, #{t})"
     if t then # 「ッ」の処理
       b =~ /^(.)/
       k = $1
@@ -280,7 +280,7 @@ end
       end
       return result
     end
-    
+
     if b == '' then
       a.gsub!(/n'([bcdfghjklmnpqrstvwxz])/, "n\\1")
       a.sub!(/n'$/,'n')

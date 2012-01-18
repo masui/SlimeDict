@@ -6,9 +6,15 @@ require 'romakana'
 
 rklist = "rklist.slime"
 
-if ARGV[0] == '-r' then
-  ARGV.shift
-  rklist = ARGV.shift
+no_tsu = true
+while ARGV[0] =~ /^\-/ do
+  if ARGV[0] == '-r' then
+    ARGV.shift
+    rklist = ARGV.shift
+  elsif ARGV[0] == '-n' then
+    ARGV.shift
+    no_tsu = false
+  end
 end
 
 files = ARGV
@@ -16,7 +22,7 @@ files = ARGV
 wordclassno = {}   # 単語クラス番号
 wordclassindex = 1
 
-rk = Romakana.new(File.readlines(File.dirname($0) + '/' + rklist),true)
+rk = Romakana.new(File.readlines(File.dirname($0) + '/' + rklist),no_tsu)
 
 lines = {}
 files.each { |file|
