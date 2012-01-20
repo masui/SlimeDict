@@ -49,6 +49,11 @@ ARGF.each { |line|
             if romas && romas[0] then
               hira = rk.roma2hiragana(romas[0])
               s = "#{hira} #{base} #{dan}行五段動詞 #{dan}行五段動詞語尾"
+	      if hira.to_s == '' || base.to_s == '' then
+                STDERR.puts line
+	      elsif s =~ /^き か行/ then
+                STDERR.puts line
+              end
             end
           end
         elsif a[4] =~ /一段/ then

@@ -54,6 +54,12 @@ ktai: corpus/ktai.txt
 		| awk '{print $$2 " " $$3 " " $$4 " " $$5}' \
 		| head -10000 > ktai.txt
 
+test:
+	cat corpus/ktai.txt \
+		| head -1000000 \
+		| mecab \
+		| ruby -Iprograms programs/mecab2dic
+
 catdiff:
 	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > tmp/tmp
 	ruby programs/dicdiff wikipedia.txt tmp/tmp | wc
