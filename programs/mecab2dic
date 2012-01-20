@@ -50,9 +50,7 @@ ARGF.each { |line|
               hira = rk.roma2hiragana(romas[0])
               s = "#{hira} #{base} #{dan}行五段動詞 #{dan}行五段動詞語尾"
 	      if hira.to_s == '' || base.to_s == '' then
-                STDERR.puts line
-	      elsif s =~ /^き か行/ then
-                STDERR.puts line
+                s = ''
               end
             end
           end
@@ -105,6 +103,7 @@ ARGF.each { |line|
         s = "#{hira} #{w} 副詞"
       end
     end
+
     if s != '' then
 # puts line
       puts s
