@@ -1,8 +1,8 @@
 slime:
 	-mkdir tmp
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
-		wikipedia.txt 500 \
-		ktai.txt 300 \
+		data/wikipedia.txt 500 \
+		data/ktai.txt 300 \
 		'SlimeDict::リスト' \
 		'SlimeDict::名詞' \
 		'SlimeDict::固有名詞' \
@@ -13,8 +13,8 @@ slime:
 
 gyaim:
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
-		wikipedia.txt 500 \
-		ktai.txt 300 \
+		data/wikipedia.txt 500 \
+		data/ktai.txt 300 \
 		'SlimeDict::リスト' \
 		'SlimeDict::名詞' \
 		'SlimeDict::固有名詞' \
@@ -44,7 +44,7 @@ wikipedia: corpus/jawiki-latest-pages-articles.xml.bz2
 		| ruby -Iprograms programs/mecab2dic \
 		| sort | uniq -c | sort -r -n \
 		| awk '{print $$2 " " $$3 " " $$4 " " $$5}' \
-		| head -10000 > wikipedia.txt
+		| head -10000 > data/wikipedia.txt
 
 ktai: corpus/ktai.txt
 	cat corpus/ktai.txt \
@@ -53,7 +53,7 @@ ktai: corpus/ktai.txt
 		| ruby -Iprograms programs/mecab2dic \
 		| sort | uniq -c | sort -r -n \
 		| awk '{print $$2 " " $$3 " " $$4 " " $$5}' \
-		| head -10000 > ktai.txt
+		| head -10000 > data/ktai.txt
 
 test:
 	cat corpus/ktai.txt \
@@ -63,10 +63,10 @@ test:
 
 catdiff:
 	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > tmp/tmp
-	ruby programs/dicdiff wikipedia.txt tmp/tmp | wc
+	ruby programs/dicdiff data/wikipedia.txt tmp/tmp | wc
 
 catmore:
-	ruby programs/dicdiff wikipedia.txt tmp/tmp | more
+	ruby programs/dicdiff data/wikipedia.txt tmp/tmp | more
 
 push:
 	git push pitecan.com:/home/masui/git/SlimeDict.git
