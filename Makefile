@@ -1,4 +1,5 @@
 slime:
+	-mkdir tmp
 	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
 		wikipedia.txt 500 \
 		ktai.txt 300 \
