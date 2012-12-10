@@ -1,6 +1,6 @@
 slime:
 	-mkdir tmp
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+	ruby -Iprograms programs/dicmerge \
 		data/wikipedia.txt 500 \
 		data/ktai.txt 300 \
 		'SlimeDict::リスト' \
@@ -9,10 +9,10 @@ slime:
 		'SlimeDict::増井リスト' \
 		> tmp/tmp
 	grep -v '.*-' tmp/tmp > tmp/tmp1
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt tmp/tmp1 > dict.txt
+	ruby -Iprograms programs/connection2txt tmp/tmp1 > dict.txt
 
 gyaim:
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+	ruby -Iprograms programs/dicmerge \
 		data/wikipedia.txt 500 \
 		data/ktai.txt 300 \
 		'SlimeDict::リスト' \
@@ -21,10 +21,10 @@ gyaim:
 		'SlimeDict::増井リスト' \
 		> tmp/tmp
 	grep -v '.*-' tmp/tmp > tmp/tmp1
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt -r rklist.gyaim -n tmp/tmp1 > ~/Gyaim/Resources/dict.txt
+	ruby -Iprograms programs/connection2txt -r rklist.gyaim -n tmp/tmp1 > ~/Gyaim/Resources/dict.txt
 
 all2:
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/dicmerge \
+	ruby -Iprograms programs/dicmerge \
 		meishi-wikipedia.dic 100 \
 		'SlimeDict::リスト' \
 		'SlimeDict::名詞' \
@@ -32,7 +32,7 @@ all2:
 		'SlimeDict::増井リスト' \
 		> tmp/tmp
 	grep -v '.*-' tmp/tmp > tmp/tmp1
-	ruby -I~/SlimeDict/programs ~/SlimeDict/programs/connection2txt tmp/tmp1 > dict.txt
+	ruby -Iprograms programs/connection2txt tmp/tmp1 > dict.txt
 
 backup:
 	ruby ~/GyazzBackup/gyazz_backup SlimeDict
@@ -62,7 +62,7 @@ test:
 		| ruby -Iprograms programs/mecab2dic
 
 catdiff:
-	ruby -I~/SlimeDict/programs programs/dicmerge 'SlimeDict::カテゴリ' > tmp/tmp
+	ruby -Iprograms programs/dicmerge 'SlimeDict::カテゴリ' > tmp/tmp
 	ruby programs/dicdiff data/wikipedia.txt tmp/tmp | wc
 
 catmore:

@@ -35,7 +35,7 @@ class MergeDic
     end
     n = 1.0
     gyazz = Gyazz.new(wiki)
-    gyazz.get(name).each { |line|
+    gyazz.get(name).split(/\n/).each { |line|
       STDERR.puts "!!!!" if line =~ /empty/
       line.chomp!
       line.sub!(/\s+$/,'')
@@ -59,7 +59,7 @@ class MergeDic
     STDERR.puts "Processing #{wiki}::#{page}"
     @wiki = wiki
     gyazz = Gyazz.new(wiki)
-    gyazz.get(page).each { |line|
+    gyazz.get(page).split(/\n/).each { |line|
       line.chomp!
       next if line =~ /^#/
       line.sub!(/\s+#.*$/,'')  # コメント除去
